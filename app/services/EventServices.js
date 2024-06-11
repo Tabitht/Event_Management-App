@@ -1,0 +1,36 @@
+const ULID = require('ulid');
+const database = require('../../config/database');
+async function getAllEvents() {
+    const collection = await database.connect('Events');
+
+    return await collection.find({}).toArray()
+}
+async function createEvent(eventData) {
+    const collection = await database.connect('Events');
+
+    const results = await collection.insertOne({
+        id: ULID.ulid(),
+        name: eventData.name,
+        description: eventData.description,
+        category: eventData.category,
+        location: eventData.location,
+        date: eventData.date,
+        Time: eventData.Time,
+        status: 'upcoming',
+        RSVP: eventData.RSVP
+    });
+
+    return results;
+}
+async function  deleteEvent(eventId){
+    const collection = await database.connect('Events');
+
+    const results = await collection.deleteOne({id: eventId})
+
+    return results
+}
+module.exports = {
+    getAllEvents,
+    createEvent,
+    deleteEvent
+}
