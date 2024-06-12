@@ -12,7 +12,7 @@ if (! host || ! port || ! protocol || ! databaseName) {
     throw new Error('One or more required environment variables (DB_HOST, DB_PORT, DB_CONNECTION, DB_DATABASE) are missing or empty.');
 }
 
-let databaseString = `${protocol}://${host}:${port}`
+let databaseString = `${protocol}://${host}:${port}` || process.env.MONGODB_URI
 
 const client = new MongoClient(databaseString);
 
