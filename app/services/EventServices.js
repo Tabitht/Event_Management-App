@@ -21,16 +21,33 @@ async function createEvent(eventData) {
     });
 
     return results;
+    console.log(results);
+}
+async function getEvent(eventId) {
+    const collection = await database.connect('Events');
+
+    const result = await collection.findOne({ 'id': eventId });
+
+    return result;
+}
+async function updateEvent(eventId, eventData){
+    const collection = await database.connect('Events');
+
+    const results = await collection.updateOne( {'id': eventId}, {$set: eventData} )
+
+    return results
 }
 async function  deleteEvent(eventId){
     const collection = await database.connect('Events');
 
-    const results = await collection.deleteOne({id: eventId})
+    const results = await collection.deleteOne({ 'id': eventId })
 
     return results
 }
 module.exports = {
     getAllEvents,
     createEvent,
+    getEvent,
+    updateEvent,
     deleteEvent
 }
