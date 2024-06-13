@@ -21,7 +21,6 @@ async function createEvent(eventData) {
     });
 
     return results;
-    console.log(results);
 }
 async function getEvent(eventId) {
     const collection = await database.connect('Events');

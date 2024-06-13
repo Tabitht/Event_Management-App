@@ -1,4 +1,4 @@
-const services = require('../services/EventServices')
+const services = require('./../services/EventServices')
 
 async function getAll(request, response) {
     try {
