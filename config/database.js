@@ -13,7 +13,8 @@ let databaseName = process.env.DB_DATABASE;
 // }
 
 let databaseString = process.env.MONGODB_URI
-// `${protocol}://${host}:${port}`
+
+    // `${protocol}://${host}:${port}` || process.env.MONGODB_URI
 
 const client = new MongoClient(databaseString);
 
