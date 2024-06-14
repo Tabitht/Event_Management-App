@@ -9,7 +9,7 @@ function validateRequest(request, response, next) {
         category: joi.string().trim().required(),
         date: joi.string().trim().required(),
         time: joi.string().trim().required(),
-        RSVP: joi.number().trim().optional().allow(''),
+        RSVP: joi.string().trim().optional().allow('')
     });
 
     const { error } = schema.validate(request.body, { abortEarly: false});

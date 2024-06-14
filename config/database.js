@@ -1,10 +1,10 @@
 const { MongoClient } = require('mongodb')
 
-// let host = process.env.DB_HOST;
+let host = process.env.DB_HOST;
 
-// let port = process.env.DB_PORT;
+let port = process.env.DB_PORT;
 
-// let protocol = process.env.DB_CONNECTION;
+let protocol = process.env.DB_CONNECTION;
 
 let databaseName = process.env.DB_DATABASE;
 
@@ -12,9 +12,8 @@ let databaseName = process.env.DB_DATABASE;
    // throw new Error('One or more required environment variables (DB_HOST, DB_PORT, DB_CONNECTION, DB_DATABASE) are missing or empty.');
 // }
 
-let databaseString = process.env.MONGODB_URI
-
-    // `${protocol}://${host}:${port}` || process.env.MONGODB_URI
+let databaseString = `${protocol}://${host}:${port}` 
+// || process.env.MONGODB_URI
 
 const client = new MongoClient(databaseString);
 

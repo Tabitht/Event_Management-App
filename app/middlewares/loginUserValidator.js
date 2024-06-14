@@ -4,7 +4,7 @@ function validateLogin(request, response, next) {
 
     const schema = joi.object({
         email: joi.string().trim().required().email(),
-        password: joi.string().trim().required(),
+        password: joi.string().trim().required()
     });
 
     const { error } = schema.validate(request.body, { abortEarly: false});

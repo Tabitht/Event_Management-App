@@ -53,7 +53,7 @@ async function loginUser(Email, password) {
         {
             exp: Math.floor(getTime(expiryDate) / 1000),
             email: User.email,
-            id: User.id,
+            id: User.id
         },
         process.env.APP_KEY,
         {
@@ -67,7 +67,7 @@ async function loginUser(Email, password) {
             id: User.id,
             email: User.email,
             full_name: User.full_name,
-            created_at: User.created_at,
+            created_at: User.created_at
         },
         jwt: {
             token: token,

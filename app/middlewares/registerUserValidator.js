@@ -5,7 +5,7 @@ function validateRegistration(request, response, next) {
     const schema = joi.object({
         full_name: joi.string().trim().required().min(4).max(30),
         email: joi.string().trim().required().email(),
-        password: joi.string().trim().required().min(6).max(30),
+        password: joi.string().trim().required().min(6).max(30)
     });
 
     const { error } = schema.validate(request.body, { abortEarly: false});
