@@ -6,9 +6,12 @@ async function register(request, response) {
    
         response.json({ 'data': results })
     } catch (error) {
-        console.log(`Error querying database: ${error}`);
-    
-        response.status(500).json({ 'data': { 'error': 'Error querying database' } });
+        if (error.message === 'User already exists') {
+            response.status(400).json({ 'error': 'User already exists' });
+        } else {
+            console.error(`Error registering user: ${error.message}`);
+            response.status(500).json({ 'error': 'Failed to register user' });
+        }
     }
 }
 async function login(request, response) {
