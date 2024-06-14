@@ -23,6 +23,7 @@ async function compareHash(password, hash) {
     return new Promise((resolve, reject) => {
 
         const [salt, hashKey] = hash.split(".");
+        const buffer = Buffer.from(hashKey, 'hex');
 
         scrypt(password, salt, keyLength, (error, derivedKey) => {
             if (error) {
