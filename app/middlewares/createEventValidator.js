@@ -8,7 +8,7 @@ function validateRequest(request, response, next) {
         location: joi.string().trim().required(),
         category: joi.string().trim().required(),
         date: joi.string().trim().required(),
-        Time: joi.string().trim().required(),
+        time: joi.string().trim().required(),
         RSVP: joi.string().trim().optional().allow('')
     });
 
