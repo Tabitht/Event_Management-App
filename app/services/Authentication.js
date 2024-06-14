@@ -23,7 +23,7 @@ async function registerUser(userData) {
         id: ULID.ulid(),
         full_name: userData.full_name,
         email: userData.email,
-        password: userData.password,
+        password: password,
         created_at: format(today, 'yyyy-MM-dd')
     });
 
