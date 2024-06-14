@@ -22,7 +22,13 @@ async function login(request, response) {
     } catch (error) {
         console.log(`Error querying database: ${error}`);
     
-        response.status(500).json({ 'data': { 'error': 'Error querying database' } });
+        if (error.message === 'User credentials do not match our records') {
+        
+            response.status(401).json({ error: 'User credentials do not match our records' });
+        } else {
+            
+            response.status(500).json({ error: 'Error querying database' });
+        }
     }
 }
 module.exports = {
