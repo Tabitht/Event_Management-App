@@ -15,7 +15,7 @@ async function createEvent(eventData) {
         category: eventData.category,
         location: eventData.location,
         date: eventData.date,
-        Time: eventData.Time,
+        time: eventData.time,
         status: 'upcoming',
         RSVP: eventData.RSVP
     });
