@@ -12,7 +12,7 @@ let databaseName = process.env.DB_DATABASE;
    // throw new Error('One or more required environment variables (DB_HOST, DB_PORT, DB_CONNECTION, DB_DATABASE) are missing or empty.');
 // }
 
-let databaseString = process.env.MONGODB_URI
+let databaseString = process.env.LOCAL_HOST || process.env.MONGODB_URI
 
 // `${protocol}://${host}:${port}` || process.env.MONGODB_URI
 

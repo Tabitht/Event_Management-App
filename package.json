@@ -4,7 +4,8 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js",
+    "dev": "nodemon server.js"
   },
   "keywords": [],
   "author": "",
@@ -18,10 +19,16 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "fns": "^1.0.0",
+    "fs": "^0.0.1-security",
     "joi": "^17.13.1",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.4.1",
     "morgan": "^1.10.0",
+    "multer": "^1.4.2",
+    "multer-gridfs-storage": "^5.0.2",
+    "nodemailer": "^6.9.14",
+    "passport": "^0.7.0",
+    "passport-google-oauth20": "^2.0.0",
     "rotating-file-stream": "^3.2.3",
     "ulid": "^2.3.0"
   },

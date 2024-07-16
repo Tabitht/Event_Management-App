@@ -1,5 +1,9 @@
 const ULID = require('ulid');
 const database = require('../../config/database');
+//const uploads = require('../../config/multer-gridFs')
+
+//const multer = require('../../config/multer-gridFs');
+
 async function getAllEvents() {
     const collection = await database.connect('Events');
 
@@ -7,19 +11,19 @@ async function getAllEvents() {
 }
 async function createEvent(eventData) {
     const collection = await database.connect('Events');
-
     const results = await collection.insertOne({
+        //image: file ? file.id : null,
         id: ULID.ulid(),
         name: eventData.name,
         description: eventData.description,
         category: eventData.category,
         location: eventData.location,
         date: eventData.date,
-        Time: eventData.Time,
+        Time: eventData.time,
         status: 'upcoming',
         RSVP: eventData.RSVP
     });
-
+    console.log(results);
     return results;
 }
 async function getEvent(eventId) {

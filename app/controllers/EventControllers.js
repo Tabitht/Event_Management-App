@@ -1,4 +1,5 @@
-const services = require('./../services/EventServices')
+const services = require('./../services/EventServices');
+//const uploads = require('../../config/multer-gridFs')
 
 async function getAll(request, response) {
     try {
@@ -14,14 +15,14 @@ async function getAll(request, response) {
 async function create(request, response) {
     try {
         const results = await services.createEvent(request.body)
-   
+        console.log(results);
         response.status(201).json({ message: 'Event Created successfully', results})
     } catch (error) {
         console.log(`Error querying database: ${error}`);
     
         response.status(500).json({ 'data': { 'error': 'Error querying database' } });
     }
-}
+    };
 async function update(request, response) {
     try {
         const results = await services.updateEvent(request.params.id, request.body)

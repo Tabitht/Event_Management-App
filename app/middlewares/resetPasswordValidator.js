@@ -1,15 +1,9 @@
 const joi = require('joi');
 
-function validateRequest(request, response, next) {
+function validateResetPassword(request, response, next) {
 
     const schema = joi.object({
-        name: joi.string().trim().required(),
-        description: joi.string().trim().optional().allow(''),
-        location: joi.string().trim().required(),
-        category: joi.string().trim().required(),
-        date: joi.string().trim().required(),
-        Time: joi.string().trim().required(),
-        RSVP: joi.string().trim().optional().allow('')
+        email: joi.string().trim().required().email()
     });
 
     const { error } = schema.validate(request.body, { abortEarly: false});
@@ -34,4 +28,4 @@ function validateRequest(request, response, next) {
     }
     next();
 }
-module.exports = validateRequest;
+module.exports = validateResetPassword;

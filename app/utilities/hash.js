@@ -1,4 +1,4 @@
-const { scrypt, randomBytes, timingSafeEqual } = require('node:crypto')
+const { scrypt, randomBytes, timingSafeEqual, randomInt } = require('node:crypto')
 
 const keyLength = 64;
 
@@ -23,6 +23,7 @@ async function compareHash(password, hash) {
     return new Promise((resolve, reject) => {
 
         const [salt, hashKey] = hash.split(".");
+        const buffer = Buffer.from(hashKey, 'hex');
 
         scrypt(password, salt, keyLength, (error, derivedKey) => {
             if (error) {
@@ -33,7 +34,20 @@ async function compareHash(password, hash) {
         });
     }); 
 }
+
+async function generateOTP(){
+    return new Promise((resolve, reject) => {
+        randomInt(100000, 999999, (error, number) => {
+            if (error) {
+                reject(error)
+            };
+
+            resolve(number);
+        });
+    });
+};
 module.exports = {
     hashPassword,
-    compareHash
+    compareHash,
+    generateOTP
 }

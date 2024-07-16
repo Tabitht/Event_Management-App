@@ -1,8 +1,9 @@
 const ULID = require('ulid');
 const jwt = require('jsonwebtoken');
 const { addseconds, getTime, format, formatISO } = require('date-fns');
-const { hashPassword, compareHash } = require('./../utilities/hash')
+const { hashPassword, compareHash, generateOTP } = require('./../utilities/hash')
 const database = require('../../config/database');
+const transporter = require('../../config/mail');
 
 async function registerUser(userData) {
     const collection = await database.connect('Users');
@@ -23,7 +24,7 @@ async function registerUser(userData) {
         id: ULID.ulid(),
         full_name: userData.full_name,
         email: userData.email,
-        password: userData.password,
+        password: password,
         created_at: format(today, 'yyyy-MM-dd')
     });
 
@@ -74,9 +75,53 @@ async function loginUser(Email, password) {
             expires_at: formatISO(expiryDate)
         }
     };
+}
+async function initiatePasswordReset(Email){
+    const collection = await database.connect('Users');
 
+    const User = await collection.findOne(
+        { email: Email }
+    )
+
+    if (User === null) {
+        throw new Error('User credentials do not match our records');
+    }
+
+    const oneTimePasswordCollection = await database.connect('one_time-passwords')
+
+    const expiryDate = addseconds(new Date(), (15 * 60));
+
+    let token;
+
+    do{
+        token = await generateOTP();
+
+        const duplicates = await oneTimePasswordCollection.countDocuments({ 'token': token })
+    } while (duplicates > 0);
+
+    await oneTimePasswordCollection.insertOne({
+        id: ULID.ulid(),
+        user_id: user.id,
+        token: token,
+        expires_at: formatISO(expiryDate)
+    });
+
+    try{   
+        await transporter.sendMail({
+             from: process.env.MAIL_SECURITY_FROM,
+            to: User.email, 
+            subject: "Password Reset Request",
+            text: `We received a request to intiate a password reset for your account. your OTP is ${token}`
+    });
+    } catch (error) {
+        console.log(error);
+    }
+    return {
+        message: `You will receive an email with password reset instuctions if an account is found for: ${Email}`
+    };
 }
 module.exports = {
     registerUser,
-    loginUser
+    loginUser,
+    initiatePasswordReset
 }
