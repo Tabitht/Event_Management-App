@@ -7,7 +7,6 @@ async function register(request, response) {
         response.json({ 'data': results })
     } catch (error) {
         console.log(`Error querying database: ${error}`);
-
         if (error.message === 'User already exists') {
             response.status(400).json({ 'error': 'User already exists' });
         } else {

@@ -48,6 +48,11 @@ async function generateOTP(){
 };
 module.exports = {
     hashPassword,
+<<<<<<< HEAD
     compareHash,
     generateOTP
 }
+=======
+    compareHash
+}
+>>>>>>> refs/remotes/origin/main

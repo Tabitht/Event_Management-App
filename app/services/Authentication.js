@@ -1,7 +1,9 @@
 const ULID = require('ulid');
 const jwt = require('jsonwebtoken');
-const { addseconds, getTime, format, formatISO } = require('date-fns');
+
+const { addSeconds, getTime, format, formatISO } = require('date-fns');
 const { hashPassword, compareHash, generateOTP } = require('./../utilities/hash')
+
 const database = require('../../config/database');
 const transporter = require('../../config/mail');
 
@@ -48,7 +50,7 @@ async function loginUser(Email, password) {
         throw new Error('User credentials do not match our records');
     }
 
-    const expiryDate = addseconds(new Date(), process.env.JWT_TOKEN_EXPIRY);
+    const expiryDate = addSeconds(new Date(), process.env.JWT_TOKEN_EXPIRY);
 
     const token = jwt.sign(
         {
