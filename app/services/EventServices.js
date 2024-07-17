@@ -9,10 +9,10 @@ async function getAllEvents() {
 
     return await collection.find({}).toArray()
 }
-async function createEvent(eventData) {
+async function createEvent(eventData, file_id) {
     const collection = await database.connect('Events');
     const results = await collection.insertOne({
-        //image: file ? file.id : null,
+        image_id: file_id, //file ? file.filename : null,
         id: ULID.ulid(),
         name: eventData.name,
         description: eventData.description,
@@ -24,7 +24,7 @@ async function createEvent(eventData) {
         RSVP: eventData.RSVP
     });
     console.log(results);
-    return results;
+    return ({ image_id: file_id });
 }
 async function getEvent(eventId) {
     const collection = await database.connect('Events');

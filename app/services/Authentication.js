@@ -35,21 +35,22 @@ async function registerUser(userData) {
 
 async function loginUser(Email, password) {
     const collection = await database.connect('Users');
-
+    console.log(Email.email);
+    console.log(password);
     const User = await collection.findOne(
-        { email: Email }
+        { email: Email.email }
     )
-
-    if (User === null) {
+    console.log(User);
+    if (!User) {
         throw new Error('User credentials do not match our records');
     }
 
     const comparePassword = await compareHash(password, User.password);
-
+    
     if (comparePassword === false) {
         throw new Error('User credentials do not match our records');
     }
-
+    
     const expiryDate = addSeconds(new Date(), process.env.JWT_TOKEN_EXPIRY);
 
     const token = jwt.sign(
@@ -64,7 +65,7 @@ async function loginUser(Email, password) {
             notBefore: '0s'
         }
     );
-
+    console.log(User.email)
     return {
         user: {
             id: User.id,

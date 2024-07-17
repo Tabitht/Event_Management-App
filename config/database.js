@@ -24,6 +24,10 @@ async function connect(collection) {
 
         const db = connection.db(databaseName)
 
+        //const bucket = new GridFSBucket(db, { bucketName: 'uploads' });
+
+        //return { collection: db.collection(collection), bucket };
+
         return db.collection(collection)
     } catch (error) {
         console.log(`Error connecting to MongoDB: ${error}`)
