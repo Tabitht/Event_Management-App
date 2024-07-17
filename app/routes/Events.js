@@ -5,13 +5,13 @@ const validateRequest = require('./../middlewares/createEventValidator');
 const authenticateuser = require('./../middlewares/authMiddleware');
 const uploads = require('../../config/upload');
 
-router.get('/', EventControllers.getAll);
+router.get('/', authenticateuser, EventControllers.getAll);
 
-router.post('/', uploads.single('eventImage'), validateRequest, EventControllers.create);
+router.post('/', authenticateuser, uploads.single('eventImage'), validateRequest, EventControllers.create);
 
-router.get('/:id', EventControllers.get);
+router.get('/:id', authenticateuser, EventControllers.get);
 
-router.put('/:id', EventControllers.update);
+router.put('/:id', authenticateuser, EventControllers.update);
 
 router.delete('/:id', authenticateuser, EventControllers.Delete);
 

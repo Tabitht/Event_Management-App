@@ -8,13 +8,13 @@ const mongoURI = process.env.LOCAL_HOST || process.env.MONGODB_URI;
 
 async function getAll(request, response) {
     try {
-        const results = await services.getAllEvents()
+        const results = await services.getAllEvents(request.User)
    
         response.json({ 'data': results })
     } catch (error) {
         console.log(`Error querying database: ${error}`);
     
-        response.status(500).json({ 'data': { 'error': 'Error querying database' } });
+        
     }
 }
 async function create(request, response) {
@@ -24,7 +24,6 @@ async function create(request, response) {
         await client.connect();
         const db = client.db('Event_Management-App');
         const bucket = new GridFSBucket(db, { bucketName: 'uploads' });
-        console.log(bucket);
         if (!request.file) {
             return response.status(400).json({ 'data': { 'error': 'File is required' } });
         }
@@ -43,7 +42,7 @@ async function create(request, response) {
             })
             .on('finish', async () => {
                 try {
-                    const results = await services.createEvent(request.body, uploadStream.id);
+                    const results = await services.createEvent(request.body, uploadStream.id, request.User);
                     response.status(201).json({ message: 'Event Created successfully', results });
                 } catch (error) {
                     console.error(`Error querying database: ${error}`);
@@ -73,35 +72,38 @@ async function create(request, response) {
 };
 async function update(request, response) {
     try {
-        const results = await services.updateEvent(request.params.id, request.body)
+        const results = await services.updateEvent(request.params.id, request.body, request.User)
    
         response.status(201).json({ message: 'Event updated successfully', results})
     } catch (error) {
         console.log(`Error querying database: ${error}`);
     
-        response.status(500).json({ 'data': { 'error': 'Error querying database' } });
+       response.status(500).json({
+            status: 'error',
+            message: error.message || 'server error',
+            statusCode: error.statusCode || 500
+        });
     }
 }
 async function get(request, response) {
     try {
-        const results = await services.getEvent(request.params.id);
+        const results = await services.getEvent(request.params.id, request.User);
 
-        if (results) {
-            response.json({ 'data': results });
-
-        } else{
-            response.status(404).json({ message: 'Event not found'});
-        }
+        response.status(201).json(results);
 
     }   catch (error) {
         console.log(`Error querying database: ${error}`);
     
-        response.status(500).json({ 'data': { 'error': 'Error querying database' } });
+        response.status(500).json({
+            status: 'error',
+            message: error.message || 'server error',
+            statusCode: error.statusCode || 500
+        });
     }
 }
 async function Delete(request, response) {
     try {
-        const results = await services.deleteEvent(request.params.id);
+        const results = await services.deleteEvent(request.params.id, request.User);
 
         if (results) {
             response.json({ message: 'Event deleted successfully' });

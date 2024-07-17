@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
+const database = require('../../config/database')
 
-function authenticateuser(request, response, next) {
+async function authenticateuser(request, response, next) {
     const authorizationHeader = request.headers.authorization;
 
     if (! authorizationHeader) {
@@ -13,9 +14,35 @@ function authenticateuser(request, response, next) {
             }
         });
     }
-    const token = authorizationHeader.split(' ')[1];
+    const collection = await database.connect('Users');
 
     try{
+        const token = authorizationHeader.split(' ')[1];
+        const decoded = jwt.verify(token, process.env.APP_KEY);
+
+        const User = await collection.findOne({ id: decoded.user_id });
+
+        if (!User) {
+            console.error('User not found for ID:', decoded.user_id);
+            return response.status(401).json({
+                status: 'fail',
+                message: 'Unauthorized: user not found',
+                statusCode: 401,
+      });
+    }
+
+    request.User = User;
+    next();
+    } catch (error) {
+     response.status(401).json({
+      status: 'fail',
+      message: 'Unauthorized: invalid token',
+      statusCode: 401,
+    });
+    }
+    //const token = authorizationHeader.split(' ')[1];
+
+    /**try{
         jwt.verify(token, process.env.APP_KEY);
     } catch(error) {
         return response.status(401).json({
@@ -27,6 +54,6 @@ function authenticateuser(request, response, next) {
             }
         });
     }
-    next();
+    next();*/
 }
 module.exports = authenticateuser;

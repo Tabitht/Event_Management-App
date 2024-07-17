@@ -35,12 +35,9 @@ async function registerUser(userData) {
 
 async function loginUser(Email, password) {
     const collection = await database.connect('Users');
-    console.log(Email.email);
-    console.log(password);
     const User = await collection.findOne(
         { email: Email.email }
     )
-    console.log(User);
     if (!User) {
         throw new Error('User credentials do not match our records');
     }
@@ -57,7 +54,7 @@ async function loginUser(Email, password) {
         {
             exp: Math.floor(getTime(expiryDate) / 1000),
             email: User.email,
-            id: User.id
+            user_id: User.id
         },
         process.env.APP_KEY,
         {
