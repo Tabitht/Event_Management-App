@@ -144,7 +144,7 @@ async function resetPassword(token, password){
     const hashedPassword = await hashPassword(password);
 
     await Users.findOneAndUpdate(
-        {'id': token.user_id},
+        {'id': otp.user_id},
         {$set: {"password": hashedPassword } }
     );
     return {
