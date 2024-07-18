@@ -42,8 +42,8 @@ async function create(request, response) {
             })
             .on('finish', async () => {
                 try {
-                    const results = await services.createEvent(request.body, uploadStream.id, request.User);
-                    response.status(201).json({ message: 'Event Created successfully', results });
+                    await services.createEvent(request.body, uploadStream.id, request.User);
+                    response.status(201).json({ message: 'Event Created successfully' });
                 } catch (error) {
                     console.error(`Error querying database: ${error}`);
                     response.status(500).json({ 'data': { 'error': 'Error querying database' } });

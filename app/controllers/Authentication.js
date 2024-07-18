@@ -2,9 +2,9 @@ const services = require('./../services/Authentication')
 
 async function register(request, response) {
     try {
-        const results = await services.registerUser(request.body)
+        await services.registerUser(request.body)
    
-        response.json({ message: 'User registered successfully', results })
+        response.status(201).json({ message: 'User registered successfully' });
     } catch (error) {
         console.log(`Error querying database: ${error}`);
         if (error.message === 'User already exists') {
