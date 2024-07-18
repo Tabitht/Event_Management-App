@@ -35,7 +35,7 @@ async function passwordReset(request, response) {
     try {
         const results = await services.initiatePasswordReset(request.body.email)
    
-        response.json({ 'data': results })
+        response.status(200).json({ 'data': results })
     } catch (error) {
         console.log(`Error querying database: ${error}`);
     
