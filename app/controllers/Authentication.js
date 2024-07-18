@@ -35,14 +35,14 @@ async function passwordReset(request, response) {
     try {
         const results = await services.initiatePasswordReset(request.body.email)
    
-        response.status(200).json({ 'data': results })
+        response.status(200).json({ results })
     } catch (error) {
         console.log(`Error querying database: ${error}`);
     
          response.status(500).json({
             status: 'error',
             message: error.message || 'server error',
-            statusCode: error.statusCode || 500
+            statusCode: error.statusCode 
         });
     }
 }
@@ -50,14 +50,14 @@ async function completePasswordReset(request, response) {
     try {
         const results = await services.resetPassword(request.body.token, request.body.password)
    
-        response.json({ 'data': results })
+        response.status(200).json({ results })
     } catch (error) {
         console.log(`Error querying database: ${error}`);
     
         response.status(500).json({
             status: 'error',
             message: error.message || 'server error',
-            statusCode: error.statusCode || 500
+            statusCode: error.statusCode 
         });
     }
 }

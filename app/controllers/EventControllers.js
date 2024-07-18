@@ -10,7 +10,7 @@ async function getAll(request, response) {
     try {
         const results = await services.getAllEvents(request.User)
    
-        response.json({ 'data': results })
+        response.status(200).json({ results })
     } catch (error) {
         console.log(`Error querying database: ${error}`);
     
@@ -72,9 +72,9 @@ async function create(request, response) {
 };
 async function update(request, response) {
     try {
-        const results = await services.updateEvent(request.params.id, request.body, request.User)
+        await services.updateEvent(request.params.id, request.body, request.User)
    
-        response.status(201).json({ message: 'Event updated successfully', results})
+        response.status(201).json({ message: 'Event updated successfully'})
     } catch (error) {
         console.log(`Error querying database: ${error}`);
     
