@@ -97,7 +97,7 @@ async function initiatePasswordReset(Email){
     let token, duplicates;
 
     do{
-        token = randomBytes(32).toString('hex');
+        token = randomBytes(4).toString('hex');
 
         duplicates = await oneTimePasswordCollection.countDocuments({ 'token': token })
     } while (duplicates > 0);

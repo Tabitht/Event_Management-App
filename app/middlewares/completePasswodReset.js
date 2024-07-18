@@ -3,7 +3,7 @@ const joi = require('joi');
 function validatecompletePasswordReset(request, response, next) {
 
     const schema = joi.object({
-        token: joi.string().trim().required().min(6).max(6),
+        token: joi.string().trim().required().min(8).max(8),
         password: joi.string().trim().required().min(6).max(30),
         password_confirm: joi.ref('password')
     });
