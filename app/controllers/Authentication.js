@@ -18,7 +18,7 @@ async function register(request, response) {
 async function login(request, response) {
     try {
         const results = await services.loginUser(request.body, request.body.password)
-        response.json({ 'data': results })
+        response.status(200).json({ 'data': results })
     } catch (error) {
         console.log(`Error querying database: ${error}`);
     
