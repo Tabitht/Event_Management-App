@@ -1,7 +1,7 @@
 const ULID = require('ulid');
 const jwt = require('jsonwebtoken');
-
-const { addSeconds, getTime, format, formatISO } = require('date-fns');
+const { randomBytes } = require('node:crypto');
+const { addSeconds, getTime, format, formatISO, parseISO, isPast } = require('date-fns');
 const { hashPassword, compareHash, generateOTP } = require('./../utilities/hash')
 
 const database = require('../../config/database');
@@ -84,24 +84,27 @@ async function initiatePasswordReset(Email){
     )
 
     if (User === null) {
-        throw new Error('User credentials do not match our records');
+        error = new Error('User credentials do not match our records');
+        error.statusCode = 404;
+        throw error;
     }
 
-    const oneTimePasswordCollection = await database.connect('one_time-passwords')
+    const oneTimePasswordCollection = await database.connect('one_time-passwords');
+    await oneTimePasswordCollection.deleteMany({'user_id': User.id});
 
-    const expiryDate = addseconds(new Date(), (15 * 60));
+    const expiryDate = addSeconds(new Date(), (15 * 60));
 
-    let token;
+    let token, duplicates;
 
     do{
-        token = await generateOTP();
+        token = randomBytes(32).toString('hex');
 
-        const duplicates = await oneTimePasswordCollection.countDocuments({ 'token': token })
+        duplicates = await oneTimePasswordCollection.countDocuments({ 'token': token })
     } while (duplicates > 0);
 
     await oneTimePasswordCollection.insertOne({
         id: ULID.ulid(),
-        user_id: user.id,
+        user_id: User.id,
         token: token,
         expires_at: formatISO(expiryDate)
     });
@@ -120,8 +123,37 @@ async function initiatePasswordReset(Email){
         message: `You will receive an email with password reset instuctions if an account is found for: ${Email}`
     };
 }
+async function resetPassword(token, password){
+    const oneTimePasswordCollection = await database.connect('one_time-passwords');
+    const otp = await oneTimePasswordCollection.findOne({ 'token': token });
+
+    if (otp === null){
+        error = new Error('invalid OTP provided');
+        error.statusCode = 404;
+        throw error;
+    }
+    let parsedDate = parseISO(otp.expires_at);
+    
+    if (isPast(parsedDate)) {
+        oneTimePasswordCollection.deleteOne({'id': otp.id})
+        error = new Error('OTP has expired');
+        error.statusCode = 403;
+        throw error;
+    }
+    const Users = await database.connect('Users');
+    const hashedPassword = await hashPassword(password);
+
+    await Users.findOneAndUpdate(
+        {'id': token.user_id},
+        {$set: {"password": hashedPassword } }
+    );
+    return {
+        message: `password reset successful`
+    }
+}
 module.exports = {
     registerUser,
     loginUser,
-    initiatePasswordReset
+    initiatePasswordReset,
+    resetPassword
 }

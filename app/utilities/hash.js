@@ -1,4 +1,4 @@
-const { scrypt, randomBytes, timingSafeEqual, randomInt } = require('node:crypto')
+const { scrypt, randomBytes, timingSafeEqual } = require('node:crypto')
 
 const keyLength = 64;
 
@@ -35,20 +35,20 @@ async function compareHash(password, hash) {
     }); 
 }
 
-async function generateOTP(){
+/*async function generateOTP(){
     return new Promise((resolve, reject) => {
         randomInt(100000, 999999, (error, number) => {
             if (error) {
                 reject(error)
             };
 
-            resolve(number);
+            resolve(number.toString());
         });
     });
-};
+};*/
 module.exports = {
     hashPassword,
-    compareHash,
-    generateOTP
+    compareHash
+   // generateOTP
 }
 

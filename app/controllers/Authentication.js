@@ -39,11 +39,31 @@ async function passwordReset(request, response) {
     } catch (error) {
         console.log(`Error querying database: ${error}`);
     
-        response.status(500).json({ 'data': { 'error': 'Error querying database' } });
+         response.status(500).json({
+            status: 'error',
+            message: error.message || 'server error',
+            statusCode: error.statusCode || 500
+        });
+    }
+}
+async function completePasswordReset(request, response) {
+    try {
+        const results = await services.resetPassword(request.body.token, request.body.password)
+   
+        response.json({ 'data': results })
+    } catch (error) {
+        console.log(`Error querying database: ${error}`);
+    
+        response.status(500).json({
+            status: 'error',
+            message: error.message || 'server error',
+            statusCode: error.statusCode || 500
+        });
     }
 }
 module.exports = {
     register,
     login,
-    passwordReset
+    passwordReset,
+    completePasswordReset
 }
