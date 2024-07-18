@@ -4,7 +4,7 @@ async function register(request, response) {
     try {
         const results = await services.registerUser(request.body)
    
-        response.json({ 'data': results })
+        response.json({ message: 'User registered successfully', results })
     } catch (error) {
         console.log(`Error querying database: ${error}`);
         if (error.message === 'User already exists') {
