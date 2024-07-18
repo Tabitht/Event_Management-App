@@ -2,7 +2,7 @@ const ULID = require('ulid');
 const jwt = require('jsonwebtoken');
 const { randomBytes } = require('node:crypto');
 const { addSeconds, getTime, format, formatISO, parseISO, isPast } = require('date-fns');
-const { hashPassword, compareHash, generateOTP } = require('./../utilities/hash')
+const { hashPassword, compareHash } = require('./../utilities/hash')
 
 const database = require('../../config/database');
 const transporter = require('../../config/mail');
