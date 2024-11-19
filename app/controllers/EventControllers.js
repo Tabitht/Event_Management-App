@@ -24,11 +24,19 @@ async function create(request, response) {
         await client.connect();
         const db = client.db('Event_Management-App');
         const bucket = new GridFSBucket(db, { bucketName: 'uploads' });
-        //if (!request.file) {
-            //readableStream.end(null);;
-       // }
 
         const readableStream = new stream.PassThrough();
+        if (request.file) {
+            readableStream.end(request.file.buffer);
+        }
+
+        const uploadStream = request.file
+            ? bucket.openUploadStream(request.file.originalname, {
+                  contentType: request.file.mimetype,
+              })
+            : null;
+
+       /** const readableStream = new stream.PassThrough();
         readableStream.end(request.file.buffer);
         if (!request.file) {
             readableStream.end(null);
@@ -36,7 +44,7 @@ async function create(request, response) {
 
         const uploadStream = bucket.openUploadStream(request.file || request.file.originalname, {
             contentType: request.file || request.file.mimetype
-        });
+        });**/
 
         readableStream.pipe(uploadStream)
             .on('error', (error) => {
@@ -59,19 +67,7 @@ async function create(request, response) {
         console.error('Error connecting to MongoDB:', error);
         response.status(500).json({ 'data': { 'error': 'Error connecting to MongoDB' } });
     }
-
-    /*try {
-        if (!request.file) {
-            return response.status(400).json({ 'data': { 'error': 'File is required' } });
-        }
-        const results = await services.createEvent(request.body, request.file)
-        console.log(request.file);
-        response.status(201).json({ message: 'Event Created successfully', results})
-    } catch (error) {
-        console.log(`Error querying database: ${error}`);
-    
-        response.status(500).json({ 'data': { 'error': 'Error querying database' } });
-    }*/
+ 
 };
 async function update(request, response) {
     try {
