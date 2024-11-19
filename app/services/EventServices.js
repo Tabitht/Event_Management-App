@@ -13,7 +13,7 @@ async function getAllEvents(user_Id) {
 async function createEvent(eventData, file_id, user_Id) {
     const collection = await database.connect('Events');
     const results = await collection.insertOne({
-        image_id: file ? file_id : null,
+        image_id: file_id,
         event_id: ULID.ulid(),
         user_id: user_Id.id,
         name: eventData.name,
