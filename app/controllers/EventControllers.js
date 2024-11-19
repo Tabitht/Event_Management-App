@@ -26,15 +26,15 @@ async function create(request, response) {
         const bucket = new GridFSBucket(db, { bucketName: 'uploads' });
         //if (!request.file) {
             //readableStream.end(null);;
-        }
+       // }
 
         const readableStream = new stream.PassThrough();
         readableStream.end(request.file.buffer);
         if (!request.file) {
             readableStream.end(null);
 
-        const uploadStream = bucket.openUploadStream(request.file.originalname, {
-            contentType: request.file.mimetype
+        const uploadStream = bucket.openUploadStream(request.file || request.file.originalname, {
+            contentType: request.file || request.file.mimetype
         });
 
         readableStream.pipe(uploadStream)
