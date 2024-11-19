@@ -32,6 +32,7 @@ async function create(request, response) {
         readableStream.end(request.file.buffer);
         if (!request.file) {
             readableStream.end(null);
+        }
 
         const uploadStream = bucket.openUploadStream(request.file || request.file.originalname, {
             contentType: request.file || request.file.mimetype
