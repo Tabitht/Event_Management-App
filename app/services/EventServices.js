@@ -27,7 +27,7 @@ async function createEvent(eventData, file_id, user_Id) {
     });
     console.log(results);
     return ({ 
-        image_id: file_id, 
+        image_id: file_id || null,
         user_id: user_Id.id });
 }
 async function getEvent(eventId, user_Id) {
