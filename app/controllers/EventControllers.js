@@ -24,12 +24,12 @@ async function create(request, response) {
         await client.connect();
         const db = client.db('Event_Management-App');
         const bucket = new GridFSBucket(db, { bucketName: 'uploads' });
-        if (!request.file) {
-            return response.status(400).json({ 'data': { 'error': 'File is required' } });
-        }
+       // if (!request.file) {
+        //    return response.status(400).json({ 'data': { 'error': 'File is required' } });
+      //  }
 
         const readableStream = new stream.PassThrough();
-        readableStream.end(request.file.buffer);
+        readableStream.end(request.file ? request.file.buffer : null);
 
         const uploadStream = bucket.openUploadStream(request.file.originalname, {
             contentType: request.file.mimetype
