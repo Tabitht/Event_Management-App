@@ -36,17 +36,38 @@ async function create(request, response) {
               })
             : null;
 
-       /** const readableStream = new stream.PassThrough();
-        readableStream.end(request.file.buffer);
-        if (!request.file) {
-            readableStream.end(null);
+        if (uploadStream) {
+            readableStream
+                .pipe(uploadStream)
+                .on('error', (error) => {
+                    console.error('Error uploading file:', error);
+                    response.status(500).json({ error: 'Error uploading file' });
+                })
+                .on('finish', async () => {
+                    try {
+                        await services.createEvent(request.body, uploadStream.id, request.User);
+                        response.status(201).json({ message: 'Event Created successfully' });
+                    } catch (error) {
+                        console.error('Error saving event data:', error);
+                        response.status(500).json({ error: 'Error saving event data' });
+                    } finally {
+                        client.close();
+                    }
+                });
+            } else {
+            // Proceed without file upload
+            try {
+                await services.createEvent(request.body, null, request.User);
+                response.status(201).json({ message: 'Event Created successfully' });
+            } catch (error) {
+                console.error('Error saving event data:', error);
+                response.status(500).json({ error: 'Error saving event data' });
+            } finally {
+                client.close();
+            }
         }
 
-        const uploadStream = bucket.openUploadStream(request.file || request.file.originalname, {
-            contentType: request.file || request.file.mimetype
-        });**/
-
-        readableStream.pipe(uploadStream)
+        /**readableStream.pipe(uploadStream)
             .on('error', (error) => {
                 console.error('Error uploading file:', error);
                 response.status(500).json({ 'data': { 'error': 'Error uploading file' } });
@@ -61,7 +82,7 @@ async function create(request, response) {
                 } finally {
                     client.close();
                 }
-            });
+            });**/
 
     } catch (error) {
         console.error('Error connecting to MongoDB:', error);
