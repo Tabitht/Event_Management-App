@@ -9,12 +9,12 @@ router.get('/events', authenticateuser, EventControllers.getAll);
 
 router.post('/events', authenticateuser, uploads.single('eventImage'), validateRequest, EventControllers.create);
 
-router.get('/events:id', authenticateuser, EventControllers.get);
+router.get('/events/:id', authenticateuser, EventControllers.get);
 
-router.put('/events:id', authenticateuser, EventControllers.update);
+router.put('/events/:id', authenticateuser, EventControllers.update);
 
-router.delete('/events:id', authenticateuser, EventControllers.Delete);
+router.delete('/events/:id', authenticateuser, EventControllers.Delete);
 
-router.get('/events/image/:id', EventControllers.getImage)
+router.get('/events/image/:id', authenticateuser, EventControllers.getImage)
 
 module.exports = router;
