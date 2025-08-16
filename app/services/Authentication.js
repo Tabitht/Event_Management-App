@@ -1,3 +1,15 @@
+/**
+ * Authentication & User Management Module
+ *
+ * This module handles user registration, login (with JWT authentication),
+ * and secure password reset through one time password (OTP).
+ *
+ * I'm proud of this snippet because;
+ * It demonstrates secure password handling (hashing & comparing).
+ * It implements JWT-based login with proper expiry and issuer claims.
+ * It integrates OTP-based password resets with email delivery and expiry checks.
+ * It’s a real-world backend logic I wrote for my Event Management Application.
+ */
 const ULID = require('ulid');
 const jwt = require('jsonwebtoken');
 const { randomBytes } = require('node:crypto');
@@ -7,6 +19,7 @@ const { hashPassword, compareHash } = require('./../utilities/hash')
 const database = require('../../config/database');
 const transporter = require('../../config/mail');
 
+// Register a new user with hashed password
 async function registerUser(userData) {
     const collection = await database.connect('Users');
 
@@ -33,6 +46,7 @@ async function registerUser(userData) {
     return results;
 }
 
+// Authenticate a user with their email and password
 async function loginUser(Email, password) {
     const collection = await database.connect('Users');
     const User = await collection.findOne(
@@ -76,6 +90,7 @@ async function loginUser(Email, password) {
         }
     };
 }
+// Generates a one-time password and emails it for user to reset their passwords 
 async function initiatePasswordReset(Email){
     const collection = await database.connect('Users');
 
@@ -123,6 +138,8 @@ async function initiatePasswordReset(Email){
         message: `You will receive an email with password reset instuctions if an account is found for: ${Email}`
     };
 }
+
+// Validate the sent OTP and reset the password
 async function resetPassword(token, password){
     const oneTimePasswordCollection = await database.connect('one_time-passwords');
     const otp = await oneTimePasswordCollection.findOne({ 'token': token });
